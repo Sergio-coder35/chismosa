@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Una pregunta importante... 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(45deg, #ff6b9d, #c06c84, #f67280, #ffa8b8);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            position: relative;
+            animation: aparecer 0.5s ease-out;
+        }
+
+        @keyframes aparecer {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            color: #ff4757;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: rebote 1s ease infinite;
+        }
+
+        @keyframes rebote {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pregunta {
+            font-size: 1.5em;
+            color: #333;
+            margin: 30px 0;
+            font-weight: bold;
+        }
+
+        .botones {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #btnSi {
+            background: linear-gradient(45deg, #ff6b9d, #ff4757);
+            color: white;
+            animation: pulsar 1.5s ease infinite;
+        }
+
+        @keyframes pulsar {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        #btnSi:hover {
+            transform: scale(1.2) rotate(5deg);
+            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.5);
+        }
+
+        #btnNo {
+            background: #ddd;
+            color: #666;
+            position: relative;
+        }
+
+        .corazones {
+            position: fixed;
+            font-size: 30px;
+            animation: caer 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes caer {
+            0% {
+                top: -10%;
+                opacity: 1;
+            }
+            100% {
+                top: 110%;
+                opacity: 0;
+            }
+        }
+
+        .celebracion {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .mensaje-final {
+            text-align: center;
+            animation: aparecer 0.5s ease-out;
+        }
+
+        .mensaje-final h2 {
+            font-size: 3em;
+            color: #ff4757;
+            margin-bottom: 20px;
+        }
+
+        .mensaje-final p {
+            font-size: 1.5em;
+            color: #333;
+        }
+
+        .emoji-grande {
+            font-size: 5em;
+            animation: girar 2s ease infinite;
+        }
+
+        @keyframes girar {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        .contador {
+            font-size: 0.9em;
+            color: #999;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💝 ¡Hey tú! 💝</h1>
+        <div class="pregunta">
+            ¿Quieres ser mi San Valentín? 🌹
+        </div>
+        <div class="botones">
+            <button id="btnSi">¡SÍ! 💕</button>
+            <button id="btnNo">No...</button>
+        </div>
+        <div class="contador" id="intentos"></div>
+    </div>
+
+    <div class="celebracion" id="celebracion">
+        <div class="mensaje-final">
+            <div class="emoji-grande">🎉💖🎊</div>
+            <h2>¡SABÍA QUE DIRÍAS QUE SÍ!</h2>
+            <p>¡Seremos el mejor equipo de San Valentín! 😊</p>
+            <div class="emoji-grande">💑✨🌹</div>
+        </div>
+    </div>
+
+    <script>
+        const btnSi = document.getElementById('btnSi');
+        const btnNo = document.getElementById('btnNo');
+        const celebracion = document.getElementById('celebracion');
+        const intentosDiv = document.getElementById('intentos');
+        let intentos = 0;
+        let tamañoSi = 1.2;
+        let tamañoNo = 1;
+
+        // Crear corazones cayendo
+        function crearCorazon() {
+            const corazon = document.createElement('div');
+            corazon.className = 'corazones';
+            corazon.textContent = Math.random() > 0.5 ? '💕' : '💖';
+            corazon.style.left = Math.random() * 100 + '%';
+            corazon.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            document.body.appendChild(corazon);
+            
+            setTimeout(() => corazon.remove(), 3000);
+        }
+
+        setInterval(crearCorazon, 300);
+
+        // Botón SÍ
+        btnSi.addEventListener('click', () => {
+            celebracion.style.display = 'flex';
+            // Crear explosión de corazones
+            for(let i = 0; i < 50; i++) {
+                setTimeout(crearCorazon, i * 50);
+            }
+        });
+
+        // Botón NO (se escapa y se hace más pequeño)
+        btnNo.addEventListener('mouseover', () => {
+            intentos++;
+            intentosDiv.textContent = `Intentos de decir "no": ${intentos} 😏`;
+            
+            // El botón NO se hace más pequeño y huye
+            tamañoNo = Math.max(0.3, tamañoNo - 0.1);
+            btnNo.style.transform = `scale(${tamañoNo})`;
+            
+            const x = Math.random() * (window.innerWidth - 150);
+            const y = Math.random() * (window.innerHeight - 150);
+            
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = x + 'px';
+            btnNo.style.top = y + 'px';
+            
+            // El botón SÍ se hace más grande
+            tamañoSi += 0.1;
+            btnSi.style.transform = `scale(${tamañoSi})`;
+            
+            // Mensajes divertidos
+            const mensajes = [
+                "¡Espera! 😅",
+                "¿Seguro? 🤔",
+                "Piénsalo bien... 💭",
+                "El SÍ es mejor opción 😉",
+                "¡Vamos! Di que sí 🥺",
+                "No seas malito/a 😢",
+                "El botón SÍ está ahí esperando... 👀",
+                "¿De verdad vas a decir no? 😱"
+            ];
+            
+            if(intentos % 3 === 0) {
+                const mensaje = mensajes[Math.floor(Math.random() * mensajes.length)];
+                btnNo.textContent = mensaje;
+                setTimeout(() => {
+                    btnNo.textContent = 'No...';
+                }, 1000);
+            }
+        });
+
+        // Por si intentan hacer click en NO
+        btnNo.addEventListener('click', (e) => {
+            e.preventDefault();
+            btnNo.style.display = 'none';
+            setTimeout(() => {
+                btnNo.style.display = 'block';
+                btnNo.style.position = 'relative';
+                btnNo.style.left = 'auto';
+                btnNo.style.top = 'auto';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
